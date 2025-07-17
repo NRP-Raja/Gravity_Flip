@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravity Flip - Sci-Fi Runner</title>
+   <link rel="stylesheet" href="style.css">
+   <script src="game.js" defer></script>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div class="ui-overlay">
+            <!-- Title Screen -->
+            <div id="titleScreen" class="screen">
+                <h1 class="title">GRAVITY FLIP</h1>
+                <p style="margin-bottom: 2rem; font-size: 1.2rem;">Sci-Fi Grav Runner</p>
+                <button class="menu-button" onclick="startGame()">START RUN</button>
+                <button class="menu-button" onclick="showUpgrades()">UPGRADES</button>
+                <button class="menu-button" onclick="showInstructions()">HOW TO PLAY</button>
+            </div>
+
+            <!-- Instructions Screen -->
+            <div id="instructionsScreen" class="screen hidden">
+                <h2 style="margin-bottom: 2rem;">HOW TO PLAY</h2>
+                <div class="instructions">
+                    <h3>Controls:</h3>
+                    <p>• Arrow Keys/WASD: Move left/right</p>
+                    <p>• Spacebar: Flip gravity (watch cooldown bar)</p>
+                    <p>• Touch: Use on-screen buttons on mobile</p>
+                    
+                    <h3>Objective:</h3>
+                    <p>• Collect Energy Cells (+5 points each)</p>
+                    <p>• Chain 3+ cells without touching ground for bonus</p>
+                    <p>• Avoid Mag-Drones, lasers, and debris</p>
+                    <p>• Reach the exit portal to complete the run</p>
+                    
+                    <h3>Power-ups:</h3>
+                    <p>• Hover Module: Free float for 5 seconds</p>
+                    <p>• Mag-Pulse: Freeze drones for 3 seconds</p>
+                    <p>• Time Warp: Slow motion for 2 seconds</p>
+                    
+                    <h3>Lives & Scoring:</h3>
+                    <p>• You have 3 lives per run</p>
+                    <p>• Time bonus for fast completion</p>
+                    <p>• Earn Gravity Keys to unlock upgrades</p>
+                </div>
+                <button class="menu-button" onclick="showTitle()">BACK</button>
+            </div>
+
+            <!-- Upgrades Screen -->
+            <div id="upgradesScreen" class="screen hidden">
+                <h2>UPGRADES</h2>
+                <div class="keys-display">Gravity Keys: <span id="keysCount">0</span></div>
+                <div class="upgrade-grid">
+                    <div class="upgrade-card" id="upgrade-ice">
+                        <h3>Ice Rooms</h3>
+                        <p>Unlock slippery ice chambers</p>
+                        <p>Cost: 10 Keys</p>
+                        <button class="menu-button" onclick="buyUpgrade('ice', 10)">PURCHASE</button>
+                    </div>
+                    <div class="upgrade-card" id="upgrade-magnetic">
+                        <h3>Magnetic Rooms</h3>
+                        <p>Unlock magnetic floor chambers</p>
+                        <p>Cost: 15 Keys</p>
+                        <button class="menu-button" onclick="buyUpgrade('magnetic', 15)">PURCHASE</button>
+                    </div>
+                    <div class="upgrade-card" id="upgrade-zerog">
+                        <h3>Zero-G Rooms</h3>
+                        <p>Unlock zero gravity chambers</p>
+                        <p>Cost: 20 Keys</p>
+                        <button class="menu-button" onclick="buyUpgrade('zerog', 20)">PURCHASE</button>
+                    </div>
+                    <div class="upgrade-card" id="upgrade-hover">
+                        <h3>Extended Hover</h3>
+                        <p>Hover Module lasts 8 seconds</p>
+                        <p>Cost: 25 Keys</p>
+                        <button class="menu-button" onclick="buyUpgrade('hover', 25)">PURCHASE</button>
+                    </div>
+                </div>
+                <button class="menu-button" onclick="showTitle()">BACK</button>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="gameOverScreen" class="screen hidden">
+                <h2>RUN COMPLETE</h2>
+                <div id="runSummary" style="margin: 2rem 0; font-size: 1.2rem; line-height: 1.8;">
+                    <!-- Summary will be populated by JavaScript -->
+                </div>
+                <button class="menu-button" onclick="showTitle()">MAIN MENU</button>
+                <button class="menu-button" onclick="startGame()">PLAY AGAIN</button>
+            </div>
+
+            <!-- HUD -->
+            <div class="hud">
+                <div class="hud-panel">
+                    <div>Score: <span id="score">0</span></div>
+                    <div>Lives: <span id="lives">3</span></div>
+                    <div>Cells: <span id="cells">0</span></div>
+                </div>
+                <div class="hud-panel">
+                    <div>Gravity Flip</div>
+                    <div class="cooldown-bar">
+                        <div class="cooldown-fill" id="cooldownBar"></div>
+                    </div>
+                </div>
+                <div class="hud-panel">
+                    <div>Room: <span id="room">1</span>/5</div>
+                    <div>Time: <span id="time">0</span>s</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div class="mobile-controls">
+            <button class="mobile-btn" id="leftBtn">←</button>
+            <button class="mobile-btn" id="flipBtn">FLIP</button>
+            <button class="mobile-btn" id="rightBtn">→</button>
+        </div>
+    </div>
+   
+    </body>
+</html>
+   
