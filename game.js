@@ -1,4 +1,15 @@
 
+        // --- Sound Effects ---
+
+        const hitSound = new Audio('./audio/hit.mp3');
+        const powerUpSound = new Audio('./audio/power-up.mp3');
+        const pointSound = new Audio('./audio/point-collision.mp3');
+
+        // --- Background Music ---
+        const bgMusic = new Audio('./audio/background_music.mp3');
+        bgMusic.loop = true;
+        bgMusic.volume = 0.5;
+
         // Game state and configuration
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -135,6 +146,8 @@
             slowTime = 0;
             loadRoom(currentRoom);
             showScreen('game');
+            // Play background music
+            try { bgMusic.currentTime = 0; bgMusic.play(); } catch (e) {}
             lastFrameTime = performance.now();
             requestAnimationFrame(gameLoop);
         }
@@ -382,17 +395,16 @@
             cells.forEach(cell => {
                 if (!cell.collected) {
                     cell.glowPhase += deltaTime * 3;
-                    
                     // Check collision with player
                     if (player.x < cell.x + cell.width &&
                         player.x + player.width > cell.x &&
                         player.y < cell.y + cell.height &&
                         player.y + player.height > cell.y) {
-                        
                         cell.collected = true;
                         cellsCollected++;
                         score += 5;
-                        
+                        // Play point sound
+                        try { pointSound.currentTime = 0; pointSound.play(); } catch (e) {}
                         // Chain bonus
                         const currentTime = Date.now();
                         if (currentTime - lastCellTime < 2000 && !player.onGround) {
@@ -404,7 +416,6 @@
                             chainCount = 1;
                         }
                         lastCellTime = currentTime;
-                        
                         // Add collect particles
                         for (let i = 0; i < 8; i++) {
                             particles.push({
@@ -471,14 +482,14 @@
             powerUps.forEach(powerUp => {
                 if (!powerUp.collected) {
                     powerUp.bobPhase += deltaTime * 2;
-                    
                     // Check collision with player
                     if (player.x < powerUp.x + powerUp.width &&
                         player.x + player.width > powerUp.x &&
                         player.y < powerUp.y + powerUp.height &&
                         player.y + player.height > powerUp.y) {
-                        
                         powerUp.collected = true;
+                        // Play power-up sound
+                        try { powerUpSound.currentTime = 0; powerUpSound.play(); } catch (e) {}
                         activatePowerUp(powerUp.type);
                     }
                 }
@@ -510,6 +521,8 @@
         }
 
         function takeDamage() {
+            // Play hit sound
+            try { hitSound.currentTime = 0; hitSound.play(); } catch (e) {}
             lives--;
             if (lives <= 0) {
                 gameOver();
@@ -525,16 +538,15 @@
 
         function gameOver() {
             gameState = 'gameOver';
-            
+            // Stop background music
+            try { bgMusic.pause(); bgMusic.currentTime = 0; } catch (e) {}
             // Calculate time bonus
             const timeElapsed = (Date.now() - startTime) / 1000;
             const timeBonus = Math.max(0, Math.floor((60 - timeElapsed) * 2));
-            
             // Calculate keys earned
             const totalScore = score + timeBonus;
             const keysEarned = Math.floor(totalScore / 100);
             gravityKeys += keysEarned;
-            
             // Update summary
             const summary = document.getElementById('runSummary');
             summary.innerHTML = `
@@ -545,7 +557,6 @@
                 <div>Lives Remaining: ${lives}</div>
                 <div style="color: #ff8800; font-size: 1.4rem;">Gravity Keys Earned: ${keysEarned}</div>
             `;
-            
             showScreen('gameOver');
         }
 
